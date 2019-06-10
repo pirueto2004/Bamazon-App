@@ -55,12 +55,12 @@ function displayInventory(){
 	connection.query(querySelect, function(err, res){
 		if(err) throw err;
 		let displayTable = new Table ({
-			head: ["Item ID", "Product Name", "Category", "Price", "Quantity"],
-			colWidths: [10,25,25,10,14]
+			head: ["Item ID", "Product Name", "Category", "Price", "Quantity", "Sales"],
+			colWidths: [10,50,30,15,15,15]
 		});
 		for(let i = 0; i < res.length; i++){
 			displayTable.push(
-				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity, res[i].product_sales]
 				);
 		}
 		console.log(displayTable.toString());

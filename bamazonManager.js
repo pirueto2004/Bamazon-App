@@ -68,13 +68,16 @@ function displayInventory(){
 			name:"action",
 			type: "list",
 			message: "Choose an option below to manage current inventory:",
-			choices: ["View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+			choices: ["View Low Inventory", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 		}]).then(function(answers){
 			switch(answers.action){
 				
 				case 'View Low Inventory':
 					lowRequest();
 					break;
+				case 'Update Product':
+					updateProduct();
+					break;	
 				case 'Add To Inventory':
 					restockRequest();
 					break;
@@ -82,7 +85,7 @@ function displayInventory(){
 					addNewProduct();
 					break;
 				case 'Remove Existing Product':
-					removeRequest();
+					removeProduct();
 					break;	
 				case 'Exit':
 					process.exit(22);
@@ -118,11 +121,14 @@ function lowRequest(){
 			name:"action",
 			type: "list",
 			message: "Choose an option below to manage current inventory:",
-			choices: ["View Products For Sale","Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+			choices: ["View Products For Sale", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 		}]).then(function(answers){
 			switch(answers.action){
 				case 'View Products For Sale':
 					displayInventory();
+					break;
+				case 'Update Product':
+					updateProduct();
 					break;
 				case 'Add To Inventory':
 					restockRequest();
@@ -131,7 +137,7 @@ function lowRequest(){
 					addNewProduct();
 					break;
 				case 'Remove Existing Product':
-					removeRequest();
+					removeProduct();
 					break;
 				case 'Exit':
 					process.exit(22);
@@ -255,13 +261,52 @@ function addNewProduct(){
 		
   };
 
+  function removeProduct(){
+	inquirer.prompt([{
+		name:"ID",
+		type:"input",
+		message:"Enter the item number of the product you would like to remove?"
+	}]).then(function(answer){
+		let id = answer.ID;
+		removeInventory(id); 
+	});
+};
+
+function removeInventory(id){
+	connection.query(
+		"SELECT * FROM products WHERE ?", 
+		{
+			item_id: id	
+		},
+		function(err, res){
+			if(err) throw err;
+			inquirer.prompt({
+                name: 'confirm',
+                type: 'confirm',
+				message: `You would like to delete ` + res[0].product_name + `. Is this correct?`
+			}).then(function(answer){
+                if (answer.confirm) {
+                    connection.query('DELETE FROM products WHERE ?', { item_id: res[0].item_id }, function(err, res){
+                        if (err) throw err;
+                        console.log('\n\tItem successfully removed!');
+                        displayInventory();
+                    });
+                } else {
+                    removeProduct();
+                }
+            });
+			
+		}
+	);
+};
+
 
 function managerInquirer(){
 	inquirer.prompt([{
 		name:"action",
 		type: "list",
 		message: "Choose an option below to manage current inventory:",
-		choices: ["View Products For Sale", "View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+		choices: ["View Products For Sale", "View Low Inventory", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 	}]).then(function(answers){
 		switch(answers.action){
             case 'View Products For Sale':
@@ -270,6 +315,9 @@ function managerInquirer(){
             case 'View Low Inventory':
 				lowRequest();
 				break;
+			case 'Update Product':
+				updateProduct();
+				break;
 			case 'Add To Inventory':
 				restockRequest();
 				break;
@@ -277,7 +325,7 @@ function managerInquirer(){
 				addNewProduct();
 				break;
 			case 'Remove Existing Product':
-				removeRequest();
+				removeProduct();
 				break;	
 			case 'Exit':
 				process.exit(22);

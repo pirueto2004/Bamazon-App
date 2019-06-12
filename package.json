@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/pirueto2004/Bamazon-App#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
     "cli-table": "^0.3.1",
     "figlet": "^1.2.3",
     "inquirer": "^6.3.1",

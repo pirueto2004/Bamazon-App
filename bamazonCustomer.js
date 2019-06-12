@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const Table = require('cli-table');
 const figlet = require('figlet');
+const chalk = require('chalk');
 
 
 // Define the MySQL connection parameters
@@ -16,6 +17,8 @@ const connection = mysql.createConnection({
 	database: 'bamazon_db'
 });
 
+const error = chalk.bold.red;
+const success = chalk.bold.blue;
 
 connection.connect(function(err) {
     if (err) throw err;
@@ -26,7 +29,7 @@ connection.connect(function(err) {
 function addHeader(message){
 	figlet('BAMAZON', function(err, data) {
 		if (err) {
-			console.log('Something went wrong...');
+			console.log(error('Something went wrong...'));
 			console.dir(err);
 			return;
 		}
@@ -57,19 +60,33 @@ function displayInventory(){
 	});
 };
 
+// validateInteger makes sure that the user is supplying only positive integers for their inputs
+function validateInput(value) {
+	var integer = Number.isInteger(parseFloat(value));
+	var sign = Math.sign(value);
+
+	if (integer && (sign === 1)) {
+		return true;
+	} else {
+		return error('Please enter a whole non-zero number.');
+	}
+}
+
 function purchasePrompt(){
 	inquirer.prompt([
 	{
 		name: "ID",
 		type: "input",
 		message:"Please enter Item ID you like to purchase.",
-		filter:Number
+		validate: validateInput,
+		filter: Number
 	},
 	{
 		name:"Quantity",
 		type:"input",
 		message:"How many items do you wish to purchase?",
-		filter:Number
+		validate: validateInput,
+		filter: Number
 	},
 
  ]).then(function(answers){
@@ -87,20 +104,64 @@ function purchaseOrder(ID, amtNeeded){
 		}, 
 		function(err,res){
 			if(err) throw err;
+			if(res[0] == undefined){
+				console.log(error('************************************************************************'));
+				console.log(error('*                 SORRY... WE FOUND NO ITEMS WITH ID "' +  ID + '"              *'));
+				console.log(error('************************************************************************'));
+				return purchasePrompt();
+			  }
 			if(amtNeeded <= res[0].stock_quantity){
 				let newStock_quantity = res[0].stock_quantity - amtNeeded;
 				let totalCost = res[0].price * amtNeeded;
 				let sales = res[0].product_sales + parseFloat(totalCost);
-				console.log("Good news your order is in stock!");
-				console.log("Your total cost for " + amtNeeded + " " +res[0].product_name + " is " + totalCost + " Thank you!");
+				let department = res[0].department_name;
+				console.log(success("Good news your order is in stock!\n"));
+				console.log("Your total cost for " + amtNeeded + " " +res[0].product_name + " is " + totalCost);
+				console.log("\nThank you for your purchase! Your Order will be delivered to you within 2 days from now.");
+				//Update inventory with new quantity and sales
+				updateDeptSales(department,sales);
 				updateInventory(ID,newStock_quantity,sales);
 				console.log("Inventory Updated...\n");
 				
 			} else{
-				console.log("Insufficient quantity, sorry we do not have enough " + res[0].product_name + "to complete your order.");
+				console.log(error("Insufficient quantity, sorry we do not have enough " + success(res[0].product_name) + " to complete your order."));
+				console.log("We only have " + success(res[0].stock_quantity) + " in stock at this time.");
+				inquirer.prompt([
+					{
+						name: "confirm",
+						type: "confirm",
+						message:"Would you like to buy this amount of items anyway?",
+					},
+					
+				 ]).then(function(answer){
+					if (answer.confirm) {
+						purchaseOrder(ID,res[0].stock_quantity);
+					}
+					
+				 });
 			};
-	    });
+		});
+	
 };
+
+function updateDeptSales(dept,sales){
+	connection.query(
+		"UPDATE departments SET ? WHERE ?",
+		[
+			{
+			   department_sales: sales
+			},
+			{
+			  
+			   department_name: dept
+			}
+		],
+		function(err, res) {
+			if (err) throw err;
+			
+		}
+	);
+}
 
 function updateInventory(id,newStock,sales){
     connection.query(

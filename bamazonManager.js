@@ -328,6 +328,7 @@ function managerInquirer(){
 				removeProduct();
 				break;	
 			case 'Exit':
+				console.log('Bye!');
 				process.exit(22);
 				break;		
 		}

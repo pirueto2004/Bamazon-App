@@ -16,7 +16,7 @@ If the ID entered was not a valid non-zero whole number or no such ID was found 
 
 ![Results](/screenshots/bamazonCustomer-item-not-found.JPG)
 
-![Results](/screenshots/bamazonCustomer-purchase-successful.JPG)
+![Results](/screenshots/bamazonCustomer-purchase3.JPG)
 
 Once the customer has placed the order, the application checks if your store has enough of the product to meet the customer's request. 
 If the requested amount is over the stock quantity of the product, then the customer is notified and asked if they want to purchase the available amount of the desired item. If customer agrees then the order is processed for the total amount in stock. If the customer decides not to purchase anything then they can exit the app, otherwise they can continue shopping.
@@ -25,7 +25,7 @@ If the requested amount is over the stock quantity of the product, then the cust
 
 If we can meet the customer's request, the app notifies the customer that their order is in stock, then it processes the customer's order, and shows the customer the product purchased and the total cost of their purchase. Then thanks customer for their purchase and advises the time for delivery. 
 
-![Results](/screenshots/bamazonCustomer-inventory-updated.JPG)
+![Results](/screenshots/bamazonCustomer-inventory-updated3.JPG)
 
 
 

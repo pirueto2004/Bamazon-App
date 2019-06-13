@@ -58,7 +58,7 @@ function displayInventory(){
 				);
 		}
 		console.log(displayTable.toString());
-		purchasePrompt();
+		customerInquirer();
 	});
 };
 
@@ -139,6 +139,9 @@ function purchaseOrder(ID, amtNeeded){
 					if (answer.confirm) {
 						purchaseOrder(ID,res[0].stock_quantity);
 					}
+					else{
+						return customerInquirer();
+					}
 					
 				 });
 			};
@@ -186,4 +189,21 @@ function updateInventory(id,newStock,sales){
     );
 };
 
-
+function customerInquirer(){
+	inquirer.prompt([{
+		name:"action",
+		type: "list",
+		message: "Choose an option below to better serve you!",
+		choices: ["Place an order", "Exit"]
+	}]).then(function(answers){
+		switch(answers.action){
+            case 'Place an order':
+                purchasePrompt();
+                break;
+            case 'Exit':
+				console.log('Bye!');
+				process.exit(22);
+				break;		
+		}
+	});
+};

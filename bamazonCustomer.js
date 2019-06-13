@@ -19,26 +19,28 @@ const connection = mysql.createConnection({
 
 const error = chalk.bold.red;
 const success = chalk.bold.blue;
+const bgCyan = chalk.bold.whiteBright.bgBlueBright;
+const magenta = chalk.bold.magentaBright;
 
 connection.connect(function(err) {
     if (err) throw err;
 	console.log("connected as id " + connection.threadId);
-	addHeader('Place Your Order Now!');
+	addHeader('BAMAZON');
 });
 
-function addHeader(message){
-	figlet('BAMAZON', function(err, data) {
+function addHeader(text){
+	figlet(text, {font: 'Standard', horizontalLayout: 'full'}, function(err, data) {
 		if (err) {
 			console.log(error('Something went wrong...'));
 			console.dir(err);
 			return;
 		}
 		console.log(data)
-		console.log('*********************************');
-		console.log('*  YOUR ONLINE BEST-DEAL STORE  *');
-		console.log('*********************************');
+		console.log(bgCyan('*********************************'));
+		console.log(bgCyan('*  YOUR ONLINE BEST-DEAL STORE  *'));
+		console.log(bgCyan('*********************************'));
 		displayInventory();
-		console.log(message);
+		console.log("\nPlace Your Order Now!\n");
 	});
 }
 
@@ -178,7 +180,8 @@ function updateInventory(id,newStock,sales){
       ],
       function(err, res) {
 		if (err) throw err;
-		addHeader('CONTINUE SHOPPING...');
+		console.log('CONTINUE SHOPPING...');
+		addHeader('BAMAZON');
       }
     );
 };

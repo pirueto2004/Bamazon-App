@@ -3,14 +3,14 @@ This is an Amazon-like storefront. The app takes in orders from customers and de
 
 The app is connected with a MySQL Database called `bamazon_db` which holds a table called `products` with all the products available for sale.
 
-This app is made up of three different Node files interconnected to each other. These modules are `bamazonCustomer.js`, `bamazonManager.js`, and `bamazonSupervisor.js`.
+This app is made up of three different Node apps interconnected to each other. These modules are `bamazonCustomer.js`, `bamazonManager.js`, and `bamazonSupervisor.js`.
 
-When running the file `bamazonCustomer.js` it will first display a banner with the name of the store and a slogan, and right after a table with all the items available for sale, and a prompt to the users by asking them to enter ID and quantity of the product they want to buy like shown here below:
+In this assigment we are only covering the app `bamazonCustomer.js`. This app will first display a banner with the name of the store and a slogan, and right after a table with all the items available for sale, and a prompt to the users by asking them to enter ID and quantity of the product they want to buy like shown here below:
 
 ![Results](/screenshots/bamazonCustomer-purchase.JPG)
 
 
-If the ID entered was not a valid non-zero whole numberm or no such ID was not found in the database, it will display error messages and will prompt the questions again.
+If the ID entered was not a valid non-zero whole number or no such ID was found in the database, it will display error messages and will prompt the questions again.
 
 ![Results](/screenshots/bamazonCustomer-non-valid-id.JPG)  
 

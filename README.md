@@ -5,7 +5,7 @@ The app is connected with a MySQL Database called `bamazon_db` which holds a tab
 
 This app is made up of three different Node modules interconnected to each other. These modules are `bamazonCustomer.js`, `bamazonManager.js`, and `bamazonSupervisor.js`.
 
-##Module `bamazonCustomer.js`: Customer View. 
+## Module `bamazonCustomer.js`: Customer View. 
 
 This app will first display a banner with the name of the store and a slogan, and right after shows a table with all the items available for sale, and a purchase prompt to the users by asking them to enter ID and quantity of the product they want to buy like shown here below:
 
@@ -29,7 +29,7 @@ If we can meet the customer's request, the app notifies the customer that their 
 
 ![Results](/screenshots/bamazonCustomer-inventory-updated3.JPG)
 
-##Module `bamazonManager.js`: Manager View. 
+## Module `bamazonManager.js`: Manager View. 
 
 Running this application will list a set of menu options:
 

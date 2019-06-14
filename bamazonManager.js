@@ -68,16 +68,12 @@ function displayInventory(){
 			name:"action",
 			type: "list",
 			message: "Choose an option below to manage current inventory:",
-			choices: ["View Low Inventory", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+			choices: ["View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 		}]).then(function(answers){
-			switch(answers.action){
-				
+			switch(answers.action){	
 				case 'View Low Inventory':
 					lowRequest();
 					break;
-				case 'Update Product':
-					updateProduct();
-					break;	
 				case 'Add To Inventory':
 					restockRequest();
 					break;
@@ -121,14 +117,11 @@ function lowRequest(){
 			name:"action",
 			type: "list",
 			message: "Choose an option below to manage current inventory:",
-			choices: ["View Products For Sale", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+			choices: ["View Products For Sale", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 		}]).then(function(answers){
 			switch(answers.action){
 				case 'View Products For Sale':
 					displayInventory();
-					break;
-				case 'Update Product':
-					updateProduct();
 					break;
 				case 'Add To Inventory':
 					restockRequest();

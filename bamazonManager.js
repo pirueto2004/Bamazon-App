@@ -306,7 +306,7 @@ function managerInquirer(){
 		name:"action",
 		type: "list",
 		message: "Choose an option below to manage current inventory:",
-		choices: ["View Products For Sale", "View Low Inventory", "Update Product", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+		choices: ["View Products For Sale", "View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 	}]).then(function(answers){
 		switch(answers.action){
             case 'View Products For Sale':
@@ -314,9 +314,6 @@ function managerInquirer(){
                 break;
             case 'View Low Inventory':
 				lowRequest();
-				break;
-			case 'Update Product':
-				updateProduct();
 				break;
 			case 'Add To Inventory':
 				restockRequest();

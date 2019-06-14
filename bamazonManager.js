@@ -19,7 +19,7 @@ const connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    managerInquirer();
+    
 });
 
 // validateInteger makes sure that the user is supplying only positive integers for their inputs
@@ -229,19 +229,21 @@ function addNewProduct(){
 									   ' Quantity = ' + quantity);
 		buildNewProduct(name,department,price,quantity); 
 	});
-	displayInventory();
+	// displayInventory();
   };
 
   function buildNewProduct(name,department,price,quantity){
 	  // Create the insertion query string
 	// Add new product to the db
+	let default_sales = 0;
 		connection.query(
 			"INSERT INTO products SET ?",
 			{
 				product_name: name,
 				department_name: department,
 				price: price,
-				stock_quantity: quantity
+				stock_quantity: quantity,
+				product_sales: default_sales
 			},
 			function (error, res) {
 			if (error) throw error;
@@ -251,7 +253,7 @@ function addNewProduct(){
 			// End the database connection
 			// connection.end();
 		});
-		
+		displayInventory();
   };
 
   function removeProduct(){
@@ -282,7 +284,7 @@ function removeInventory(id){
                     connection.query('DELETE FROM products WHERE ?', { item_id: res[0].item_id }, function(err, res){
                         if (err) throw err;
                         console.log('\n\tItem successfully removed!');
-                        displayInventory();
+                        
                     });
                 } else {
                     removeProduct();
@@ -291,6 +293,7 @@ function removeInventory(id){
 			
 		}
 	);
+	displayInventory();
 };
 
 
@@ -325,3 +328,4 @@ function managerInquirer(){
 	});
 };
 
+managerInquirer();

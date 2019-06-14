@@ -55,5 +55,12 @@ After replenishing the items, the app lists the inventory updated.
 
 ![Results](/screenshots/bamazonManager-low-inventory-updated.JPG)
 
+If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
+
+![Results](/screenshots/bamazonManager-adding-new-item.JPG)
+
+After adding the new product, the app lists the inventory updated.
+
+![Results](/screenshots/bamazonManager-inventory-after-adding-item.JPG)
 
 

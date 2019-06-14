@@ -47,3 +47,9 @@ If a manager selects `View Products for Sale`, the app displays a table with the
 
 ![Results](/screenshots/bamazonManager-view-inventory.JPG)
 
+If a manager selects `View Low Inventory`, then it should list all items with an inventory count lower than five.
+
+![Results](/screenshots/bamazonManager-low-inventory-updated.JPG)
+
+![Results](/screenshots/bamazonManager-low-inventory-and-updating.JPG)
+

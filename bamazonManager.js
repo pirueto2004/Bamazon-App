@@ -59,7 +59,7 @@ function validateInteger(value) {
 function validateNumeric(value) {
 	// Value must be a positive number
 	var number = (typeof parseFloat(value)) === 'number';
-	var positive = parseFloat(value) > 0;
+	var positive = parseFloat(value) >= 0;
 
 	if (number && positive) {
 		return true;

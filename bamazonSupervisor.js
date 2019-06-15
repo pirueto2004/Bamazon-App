@@ -49,7 +49,7 @@ function addHeader(text){
 function validateNumeric(value) {
 	// Value must be a positive number
 	var number = (typeof parseFloat(value)) === 'number';
-	var positive = parseFloat(value) > 0;
+	var positive = parseFloat(value) >= 0;
 
 	if (number && positive) {
 		return true;
@@ -83,7 +83,7 @@ function displayInventory(){
 //view product sales by department
 function viewSalesByDept(){
     //prints the items for sale and their details
-    let query = "SELECT departments.department_id , departments.department_name , departments.over_head_costs, products.product_sales FROM departments ,products WHERE departments.department_name = products.department_name";
+    let query = "SELECT departments.department_id , departments.department_name , departments.over_head_costs, products.product_sales FROM departments ,products WHERE departments.department_name = products.department_name ORDER BY department_id";
     connection.query(query, function(err, res){
       if(err) throw err;
       console.log('\n*******************************************');
@@ -103,9 +103,12 @@ function viewSalesByDept(){
         name:"action",
         type: "list",
         message: "Choose an option below to manage current inventory:",
-        choices: ["Create New Department", "Exit"]
+        choices: ["View All Departments", "Create New Department", "Exit"]
       }]).then(function(answers){
         switch(answers.action){
+                case 'View All Departments':
+                    viewAllDepts();;
+                    break;
                 case 'Create New Department':
                     createDepartment();
                     break;
@@ -121,59 +124,99 @@ function viewSalesByDept(){
 
 function createDepartment(){
   inquirer.prompt([
-    {
-      name: "ID",
-      type: "input",
-      message: "Please enter the ID for the new department?"
-    },
+    
     {
       name: "Department",
       type: "input",
-      message: "Please enter the new department name to add to the database?"
+      message: "Please enter the new Department name to add to the database? "
     },
     {
       name:"Costs",
       type:"input",
-      message:"How much is the Over Head Costs of this department?",
+      message:"Enter Over Head Costs for this department: ",
+      default: 0,
+      validate: validateNumeric
+    }, 
+    {
+      name: "deptSales",
+      type: "input",
+      message: "Department Product Sales: ",
+      default: 0,
       validate: validateNumeric
     },
       
     ]).then(function(answers){
-      let id = answers.ID;
       let department = answers.Department;
       let costs = answers.Costs;
+      let sales = answers.deptSales;
       
       console.log('\n Adding New Department: \n\n Department = ' + department + '\n' +  
-                       ' Over Head Costs = ' + parseFloat(costs).toFixed(2) + '\n');
-      buildNewDept(id, department,costs); 
+                       ' Over Head Costs = ' + parseFloat(costs).toFixed(2) + '\n' +
+                       ' Sales = ' + parseFloat(sales).toFixed(2) + '\n' );
+      buildNewDept(department,costs,sales); 
+      
     });
-    // displayInventory();
-    
 };
 
-function buildNewDept(id, dept, costs){
+function buildNewDept(dept,costs,sales){
     // Create the insertion query string
 	// Add new product to the db
-  let default_sales = 0;
-  
+   
   connection.query(
     "INSERT INTO departments SET ?",
     {
-      department_id: id,
       department_name: dept,
       over_head_costs: costs,
-      department_sales: default_sales
+      department_sales: sales
       
     },
     function (error, res) {
-    if (error) throw error;
-
-    console.log('New department has been added to the database under ID ' + res.insertId + '.');
-    console.log("\n---------------------------------------------------------------------\n");
-    // End the database connection
-    // connection.end();
-  });
+      if (error) throw error;
+      console.log(res);
+      console.log('New department has been added to the database under ID ' + res.insertId + '.');
+      console.log("\n---------------------------------------------------------------------\n");
+      // End the database connection
+      // connection.end();
+    });
   viewSalesByDept();
+};
+
+function viewAllDepts(){
+  console.log('*********************************');
+  console.log('*         ALL DEPARTMENTS       *');
+  console.log('*********************************');
+  let querySelect = "SELECT * FROM departments";
+  connection.query(querySelect, function(err, res){
+    if(err) throw err;
+    let displayTable = new Table ({
+      head: ["Department ID", "Department Name"],
+      colWidths: [20,50]
+    });
+    for(let i = 0; i < res.length; i++){
+      displayTable.push([res[i].department_id,res[i].department_name]);
+    }
+    console.log(displayTable.toString());
+    inquirer.prompt([{
+      name:"action",
+      type: "list",
+      message: "Choose an option below to manage current inventory:",
+      choices: ["Create New Department", "View Product Sales by Department", "Exit"]
+    }]).then(function(answers){
+      switch(answers.action){
+              case 'Create New Department':
+                  createDepartment();
+                  break;
+              case 'View Product Sales by Department':
+                  viewSalesByDept();
+                  break;
+              case 'Exit':
+                  console.log('Bye!');
+                  process.exit(22);
+                  break;		
+      }
+    });
+    
+  });
 };
 
 function supervisorInquirer(){
@@ -181,9 +224,12 @@ function supervisorInquirer(){
 		name:"action",
 		type: "list",
 		message: "Choose an option below to manage current inventory:",
-		choices: ["View Product Sales by Department", "Create New Department", "Exit"]
+		choices: ["View All Departments", "View Product Sales by Department", "Create New Department", "Exit"]
 	}]).then(function(answers){
 		switch(answers.action){
+            case 'View All Departments':
+                viewAllDepts();
+                break;
             case 'View Product Sales by Department':
                 viewSalesByDept();
                 break;

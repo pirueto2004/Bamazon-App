@@ -66,13 +66,15 @@ After adding the new product, the app lists the inventory updated.
 
 ## Module `bamazonSupervisor.js`: Supervisor View. 
 
-Running this application will list a set of menu options:
+Running this application will first display a table with all the products for sale and right after a set of menu options:
 
    * View Product Sales by Department
    
    * Create New Department
 
-For this module, a new table called `departments` was created. This table includes the following columns:
+![Results](/screenshots/bamazonSupervisor-view.JPG)
+
+For this module, a new table called `departments` was created. We used the mysql JOIN Clause to combine tables products and departments based on the department_name column. This table includes the following columns:
 
    * department_id
 
@@ -82,3 +84,4 @@ For this module, a new table called `departments` was created. This table includ
 
 When a supervisor selects `View Product Sales by Department`, the app displays a summarized table in their terminal/bash window as the following:
 
+![Results](/screenshots/bamazonSupervisor-view2.JPG)

@@ -83,7 +83,7 @@ function displayInventory(){
 //view product sales by department
 function viewSalesByDept(){
     //prints the items for sale and their details
-    let query = "SELECT departments.department_id , departments.department_name , departments.over_head_costs, products.product_sales FROM departments ,products WHERE departments.department_name = products.department_name GROUP BY department_id";
+    let query = "SELECT departments.department_id , departments.department_name , departments.over_head_costs, products.product_sales FROM departments ,products WHERE departments.department_name = products.department_name";
     connection.query(query, function(err, res){
       if(err) throw err;
       console.log('\n*******************************************');

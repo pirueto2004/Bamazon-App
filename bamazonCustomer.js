@@ -36,9 +36,9 @@ function addHeader(text){
 			return;
 		}
 		console.log(data)
-		console.log(bgCyan('*********************************'));
-		console.log(bgCyan('*  YOUR ONLINE BEST-DEAL STORE  *'));
-		console.log(bgCyan('*********************************'));
+		console.log(bgCyan('*********************************************'));
+		console.log(bgCyan('*  WELCOME TO YOUR ONLINE BEST-DEAL STORE!  *'));
+		console.log(bgCyan('*********************************************'));
 		displayInventory();
 		console.log("\nPlace Your Order Now!\n");
 	});
@@ -54,7 +54,7 @@ function displayInventory(){
 		});
 		for(let i = 0; i < res.length; i++){
 			displayTable.push(
-				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity, res[i].product_sales]
+				[res[i].item_id,res[i].product_name, res[i].department_name, parseFloat(res[i].price).toFixed(2), res[i].stock_quantity, res[i].product_sales]
 				);
 		}
 		console.log(displayTable.toString());

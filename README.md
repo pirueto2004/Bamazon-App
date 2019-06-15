@@ -64,3 +64,21 @@ After adding the new product, the app lists the inventory updated.
 ![Results](/screenshots/bamazonManager-inventory-after-adding-item.JPG)
 
 
+## Module `bamazonSupervisor.js`: Supervisor View. 
+
+Running this application will list a set of menu options:
+
+   * View Product Sales by Department
+   
+   * Create New Department
+
+For this module, a new table called `departments` was created. This table includes the following columns:
+
+   * department_id
+
+   * department_name
+
+   * over_head_costs
+
+When a supervisor selects `View Product Sales by Department`, the app displays a summarized table in their terminal/bash window as the following:
+

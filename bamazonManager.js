@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const Table = require('cli-table');
 const figlet = require('figlet');
+const chalk = require('chalk');
 
 // Define the MySQL connection parameters
 const connection = mysql.createConnection({
@@ -15,12 +16,32 @@ const connection = mysql.createConnection({
 	database: 'bamazon_db'
 });
 
+const error = chalk.bold.red;
+const success = chalk.bold.blue;
+const bgCyan = chalk.bold.whiteBright.bgBlueBright;
+const magenta = chalk.bold.magentaBright;
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    
+	console.log("connected as id " + connection.threadId);
+	addHeader('BAMAZON');
 });
+
+function addHeader(text){
+	figlet(text, {font: 'Standard', horizontalLayout: 'full'}, function(err, data) {
+		if (err) {
+			console.log(error('Something went wrong...'));
+			console.dir(err);
+			return;
+		}
+		console.log(data)
+		console.log(bgCyan('**********************************************'));
+		console.log(bgCyan('*            MANAGER DASHBOARD               *'));
+		console.log(bgCyan('**********************************************'));
+		displayInventory();
+	});
+	
+}
 
 // validateInteger makes sure that the user is supplying only positive integers for their inputs
 function validateInteger(value) {
@@ -48,6 +69,7 @@ function validateNumeric(value) {
 }
 
 function displayInventory(){
+	
     console.log('*********************************');
 	console.log('*       PRODUCTS FOR SALE       *');
 	console.log('*********************************');
@@ -60,34 +82,12 @@ function displayInventory(){
 		});
 		for(let i = 0; i < res.length; i++){
 			displayTable.push(
-				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity, res[i].product_sales]
+				[res[i].item_id,res[i].product_name, res[i].department_name, parseFloat(res[i].price).toFixed(2), res[i].stock_quantity, parseFloat(res[i].product_sales).toFixed(2)]
 				);
 		}
 		console.log(displayTable.toString());
-		inquirer.prompt([{
-			name:"action",
-			type: "list",
-			message: "Choose an option below to manage current inventory:",
-			choices: ["View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
-		}]).then(function(answers){
-			switch(answers.action){	
-				case 'View Low Inventory':
-					lowRequest();
-					break;
-				case 'Add To Inventory':
-					restockRequest();
-					break;
-				case 'Add New Product':
-					addNewProduct();
-					break;
-				case 'Remove Existing Product':
-					removeProduct();
-					break;	
-				case 'Exit':
-					process.exit(22);
-					break;	
-			}
-		});
+		managerInquirer();
+		
 	});
 };
 
@@ -105,7 +105,7 @@ function lowRequest(){
 		
                 console.log("Low Inventory of " + res[i].product_name + ". Restock this product!");
                 displayTable.push(
-				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+				[res[i].item_id,res[i].product_name, res[i].department_name, parseFloat(res[i].price).toFixed(2), res[i].stock_quantity]
             	);
 		    };
         };
@@ -113,6 +113,7 @@ function lowRequest(){
 	    console.log('*     LOW INVENTORY PRODUCTS    *');
 	    console.log('*********************************');
 		console.log(displayTable.toString());
+		
 		inquirer.prompt([{
 			name:"action",
 			type: "list",
@@ -225,7 +226,7 @@ function addNewProduct(){
 		let quantity = answers.Quantity;
 		console.log('\n Adding New Product: \n\n Product Name = ' + name + '\n' +  
 									   ' Department = ' + department + '\n' +  
-									   ' Price = ' + parseFloat(price) + '\n' +  
+									   ' Price = ' + parseFloat(price).toFixed(2) + '\n' +  
 									   ' Quantity = ' + quantity);
 		buildNewProduct(name,department,price,quantity); 
 	});
@@ -298,16 +299,14 @@ function removeInventory(id){
 
 
 function managerInquirer(){
+	
 	inquirer.prompt([{
 		name:"action",
 		type: "list",
 		message: "Choose an option below to manage current inventory:",
-		choices: ["View Products For Sale", "View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
+		choices: ["View Low Inventory", "Add To Inventory", "Add New Product", "Remove Existing Product", "Exit"]
 	}]).then(function(answers){
 		switch(answers.action){
-            case 'View Products For Sale':
-                displayInventory();
-                break;
             case 'View Low Inventory':
 				lowRequest();
 				break;
@@ -328,4 +327,3 @@ function managerInquirer(){
 	});
 };
 
-managerInquirer();
